@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Conta do Usuário</title>
+  <link rel="stylesheet" href="account.css" />
+  <link rel="icon" type="image/png" href="assets/favicon.ico" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Sua Conta</h1>
+  </header>
+
+  <main class="main-container">
+    <section class="account-card">
+      <h2>Informações da Conta</h2>
+
+      <div class="user-field">
+        <strong>Usuário:</strong>
+        <span id="current-username">Carregando...</span>
+        <button class="action-btn" id="change-username">Mudar Usuário</button>
+      </div>
+
+      <div class="user-field">
+        <strong>Email:</strong>
+        <span id="current-email">Carregando...</span>
+        <button class="action-btn" id="change-email">Mudar Email</button>
+      </div>
+
+      <div class="user-field">
+        <strong>Senha:</strong>
+        <span id="current-password">********</span>
+        <button class="action-btn" id="change-password">Mudar Senha</button>
+      </div>
+
+      <button class="back-btn" id="back-to-decks">⬅ Voltar para Meus Decks</button>
+    </section>
+  </main>
+
+  <script src="account.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GL Deck Builder</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="assets/favicon.ico" />
+</head>
+<body>
+  <header class="app-header">
+    <h2>Gengar Labs Deck Builder</h2>
+  </header>
+
+  <div id="hover-preview"></div>
+
+  <main class="main-container deckbuilder">
+    <!-- Deck Section -->
+    <section id="deck-display" class="card">
+      <div class="section-header">
+        <input id="deck-name" type="text" placeholder="Your Deck Name" value="Your Deck">
+        <span id="deck-counter">0/60</span>
+      </div>
+
+      <div id="deck-price">💰 Total Price: $0.00</div>
+      <div id="your-deck" class="card-list"></div>
+
+      <div class="deck-controls">
+        <button id="save-deck">💾 Save Deck</button>
+        <button id="copy-deck">📋 Copy to TCG Live</button>
+
+      </div>
+
+      <ul id="deck-list"></ul>
+    </section>
+
+    <!-- All Cards Section -->
+    <section id="card-gallery" class="card">
+      <div class="section-header">
+        <h2 class="search-title">All Cards (Standard)</h2>
+      </div>
+
+
+      <div style="margin-bottom: 10px;">
+        <input id="all-cards-search-bar" type="text" class="search-bar" placeholder="Search cards...">
+      </div>
+      <details id="filter-options" class="filter-group">
+        <summary>🔍 Filters</summary>
+      
+        <details class="filter-subgroup">
+          <summary>Card Type</summary>
+          <label><input type="checkbox" class="filter-type" value="pokémon"> Pokémon</label>
+          <label><input type="checkbox" class="filter-type" value="trainer"> Trainer</label>
+          <label><input type="checkbox" class="filter-type" value="energy"> Energy</label>
+        </details>
+      
+        <details class="filter-subgroup">
+          <summary>Pokémon Type</summary>
+          <div class="filter-row">
+            <label><input type="checkbox" class="filter-element" value="fire"> Fire</label>
+            <label><input type="checkbox" class="filter-element" value="water"> Water</label>
+            <label><input type="checkbox" class="filter-element" value="grass"> Grass</label>
+            <label><input type="checkbox" class="filter-element" value="lightning"> Lightning</label>
+            <label><input type="checkbox" class="filter-element" value="fighting"> Fighting</label>
+            <label><input type="checkbox" class="filter-element" value="psychic"> Psychic</label>
+            <label><input type="checkbox" class="filter-element" value="darkness"> Darkness</label>
+            <label><input type="checkbox" class="filter-element" value="metal"> Metal</label>
+            <label><input type="checkbox" class="filter-element" value="dragon"> Dragon</label>
+            <label><input type="checkbox" class="filter-element" value="colorless"> Colorless</label>
+          </div>
+        </details>
+      
+        <details class="filter-subgroup">
+          <summary>Set</summary>
+          <input type="text" id="filter-set" class="search-bar" placeholder="Ex: Paradox Rift">
+        </details>
+      </details>
+      
+        <!-- 🔽 Price Filter -->
+        <details class="filter-group">
+          <summary><strong>Price Filter ($)</strong></summary>
+          <label>Min: <input type="number" id="min-price" placeholder="0" min="0" step="0.01"></label><br>
+          <label>Max: <input type="number" id="max-price" placeholder="20" min="0" step="0.01"></label>
+        </details>
+      
+        <!-- 🔽 Sort Options -->
+        <details class="filter-group">
+          <summary><strong>Sort By</strong></summary>
+          <select id="sort-by">
+            <option value="">-- Select --</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="set">Set Name (A-Z)</option>
+            <option value="type">Pokémon Type (A-Z)</option>
+            <option value="name">Card Name (A-Z)</option>
+          </select>
+        </details>
+      
+        <!-- 🔽 Advanced -->
+        <details class="filter-group">
+          <summary>Trainer Subtype</summary>
+          <label><input type="checkbox" class="filter-subtype" value="item"> Item</label>
+          <label><input type="checkbox" class="filter-subtype" value="supporter"> Supporter</label>
+          <label><input type="checkbox" class="filter-subtype" value="pokémon tool"> Pokémon Tool</label>
+        </details>
+      
+
+      <div id="all-cards" class="card-list"></div>
+
+      <div id="loading-indicator" style="text-align: center; padding: 10px; display: none;">
+        <p>Loading cards...</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2025 Pokémon TCG Deck Builder</p>
+  </footer>
+
+  <script src="api.js" type="module"></script>
+  <script src="deckManager.js" type="module"></script>
+  <script src="filters.js" type="module"></script>
+  <script src="ui.js" type="module"></script>
+  <script src="app.js" type="module"></script>
+    <!-- 🔍 Deck Price Modal -->
+<div id="deck-price-modal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <h2>🃏 Cartas no Deck</h2>
+    <ul id="deck-price-details"></ul>
+  </div>
+</div>
+</body>
+</html>

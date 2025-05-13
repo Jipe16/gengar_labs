@@ -1,0 +1,113 @@
+/* Estilo geral */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+  }
+  
+  /* Cabeçalho */
+  .app-header {
+    background-color: #3b0a5c;
+    padding: 20px;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  }
+  
+  .app-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  
+  /* Container principal */
+  .main-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  /* Card da seção */
+  .card {
+    background-color: #2a2a2a;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Título de boas-vindas */
+  .card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+  }
+  
+  /* Botões */
+  .decklist-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .decklist-controls button {
+    padding: 10px 20px;
+    background-color: #6a1b9a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .decklist-controls button:hover {
+    background-color: #8e24aa;
+  }
+  
+  /* Lista de decks */
+  .deck-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .deck-list li {
+    background-color: #3a3a3a;
+    margin-bottom: 12px;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .deck-list li span {
+    flex: 1;
+  }
+  
+  .deck-list li .deck-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  
+  .deck-list li:hover {
+    background-color: #4a2e65;
+  }
+  
+  .deck-list button {
+    background-color: #9575cd;
+    color: #1e1e1e;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+  }
+  
+  .deck-list button:hover {
+    background-color: #b39ddb;
+  }
+  

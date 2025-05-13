@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GL Decklists</title>
+  <link rel="stylesheet" href="decklists.css">
+  <link rel="icon" type="image/png" href="assets/favicon.ico" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Gengar Labs</h1>
+  </header>
+
+  <main class="main-container">
+    <section class="card">
+      <h2>Welcome, <span id="username-display"></span>!</h2>
+      <div class="decklist-controls">
+        <button id="account-button">⚙️ Account Settings</button>
+        <button onclick="window.location.href='community.html'">🌐 Decks da Comunidade</button>
+        <button id="create-new-deck">➕ Create New Deck</button>
+        <button id="logout-button">🚪 Logout</button>
+      </div>
+
+      <ul id="deck-list" class="deck-list">
+        <!-- Decks aparecerão aqui -->
+      </ul>
+    </section>
+  </main>
+
+  <script src="decklists.js" type="module"></script>
+  <script type="module">
+    document.getElementById("account-button").addEventListener("click", () => {
+      window.location.href = "account.html";
+    });
+  </script>
+  
+</body>
+</html>
