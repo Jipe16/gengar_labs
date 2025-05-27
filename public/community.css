@@ -1,0 +1,200 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+.app-header {
+  background-color: #3b0a5c;
+  padding: 20px;
+  text-align: center;
+  color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.decklist-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+.decklist-controls select,
+.decklist-controls button {
+  padding: 10px 16px;
+  background-color: #6a1b9a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.decklist-controls select {
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+.decklist-controls button:hover {
+  background-color: #8e24aa;
+}
+
+.main-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.deck-card {
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.deck-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #444;
+  margin-bottom: 10px;
+}
+
+.deck-header h2 {
+  margin: 0;
+}
+
+.deck-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.deck-left, .deck-right {
+  flex: 1;
+  min-width: 280px;
+}
+
+.deck-left img.main-card {
+  width: 100%;
+  max-width: 250px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000;
+}
+
+.deck-left .description {
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.deck-left .key-cards ul,
+.deck-left .deck-links {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.deck-left .deck-links a {
+  color: #4ea4ff;
+  text-decoration: underline;
+  display: block;
+  margin-top: 5px;
+}
+
+.deck-right pre {
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 8px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 0.95rem;
+  border: 1px solid #444;
+}
+
+.deck-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.vote-section {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.vote-section button {
+  background-color: #6200ea;
+  border: none;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.vote-section button:hover {
+  background-color: #7e57c2;
+}
+
+.copy-deck,
+.import-deck {
+  width: 100%;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.copy-deck {
+  background-color: #7b1fa2;
+  color: white;
+  border: none;
+}
+
+.copy-deck:hover {
+  background-color: #9c27b0;
+}
+
+.import-deck {
+  background-color: #444;
+  color: #fff;
+  border: 1px solid #888;
+}
+
+.import-deck:hover {
+  background-color: #666;
+}
+
+#search-decks {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  font-size: 1rem;
+  max-width: 250px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#search-decks:focus {
+  border-color: #a259ff;
+  box-shadow: 0 0 5px rgba(162, 89, 255, 0.6);
+}

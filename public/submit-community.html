@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enviar Deck à Comunidade</title>
+  <link rel="stylesheet" href="submit-community.css" />
+  <link rel="icon" type="image/png" href="assets/favicon.ico" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Enviar Deck à Comunidade</h1>
+  </header>
+
+  <main class="main-container">
+    <div class="card">
+      <h2>Complete as informações do deck:</h2>
+      <form id="submit-community-form">
+        <div class="form-group">
+          <label for="main-card">Carta Principal (Capa):</label>
+          <select id="main-card" required></select>
+        </div>
+
+        <div class="form-group">
+          <label for="key-cards">Cartas-chave (1 a 5):</label>
+          <div id="key-cards" class="checkbox-container"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Descrição / Estratégia do Deck:</label>
+          <textarea id="description" maxlength="500" rows="5" placeholder="Explique como o deck funciona... (máx. 500 caracteres)" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="video-links">Links de vídeo (opcional):</label>
+          <input type="url" id="video-links" placeholder="https://youtube.com/...">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit">📤 Enviar à Comunidade</button>
+          <button type="button" onclick="window.location.href='decklists.html'">🔙 Voltar</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script src="submit-community.js"></script>
+</body>
+</html>
