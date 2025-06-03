@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Register</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="register.css" />
   <link rel="icon" type="image/png" href="assets/favicon.ico" />
 </head>
 <body>
@@ -12,18 +12,20 @@
   </header>
 
   <main class="main-container">
-    <form id="register-form" class="card">
-      <label for="username">Username</label>
-      <input type="text" id="username" required />
+    <section class="card">
+      <form id="register-form" class="form-container">
+        <label for="username">Username</label>
+        <input type="text" id="username" class="input-field" required />
 
-      <label for="email">Email</label>
-      <input type="email" id="email" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" class="input-field" required />
 
-      <label for="password">Password</label>
-      <input type="password" id="password" required />
+        <label for="password">Password</label>
+        <input type="password" id="password" class="input-field" required />
 
-      <button type="submit">Register</button>
-    </form>
+        <button type="submit" class="btn-purple">Register</button>
+      </form>
+    </section>
   </main>
 
   <script src="register.js" type="module"></script>
