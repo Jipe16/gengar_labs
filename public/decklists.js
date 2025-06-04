@@ -38,8 +38,9 @@ const loadUserDecks = async () => {
             deckItem.innerHTML = `
                 <span>${deck.deck_name} (${totalCardCount} cards)</span>
                 <div class="deck-actions">
-                    <button class="load-deck" data-id="${deck.id}">Load</button>
+                    <button class="load-deck" data-id="${deck.id}">Editar</button>
                     <button class="publish-deck" data-id="${deck.id}">📢 Publicar</button>
+                    <button class="delete-deck" data-id="${deck.id}">🗑️ Deletar</button>
                 </div>
             `;
 
@@ -57,6 +58,32 @@ const loadUserDecks = async () => {
                 localStorage.setItem("selectedDeck", deck.id); // CORRETO AGORA
                 window.location.href = "submit-community.html";
             });
+
+            deckItem.querySelector(".delete-deck").addEventListener("click", async () => {
+                const confirmDelete = confirm("Tem certeza que deseja deletar este deck? Caso ele tenha sido publicado na comunidade, será removido de lá também.");
+                if (!confirmDelete) return;
+
+                try {
+                    const response = await fetch(`http://localhost:5000/delete-deck/${deck.id}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Authorization": `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        alert("Deck deleted successfully!");
+                        loadUserDecks(); // Recarrega lista de decks
+                    } else {
+                        const data = await response.json();
+                        alert(`Failed to delete deck: ${data.error}`);
+                    }
+                } catch (err) {
+                    console.error("Error deleting deck:", err);
+                    alert("An error occurred while deleting the deck.");
+                }
+            });
+
         });
 
     } catch (error) {

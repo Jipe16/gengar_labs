@@ -17,17 +17,19 @@
   <main class="main-container deckbuilder">
     <!-- Deck Section -->
     <section id="deck-display" class="card">
-      <div class="section-header">
-        <input id="deck-name" type="text" placeholder="Your Deck Name" value="Your Deck">
-        <span id="deck-counter">0/60</span>
-      </div>
+      <div class="section-header deck-name-wrapper">
+  <input id="deck-name" type="text" placeholder="Nome do seu Deck Aqui" value="Meu Deck">
+  <span id="deck-counter">0/60</span>
+</div>
 
-      <div id="deck-price">💰 Total Price: $0.00</div>
+
+
+      <div id="deck-price">💰 Preço Total: $0.00</div>
       <div id="your-deck" class="card-list"></div>
 
       <div class="deck-controls">
-        <button id="save-deck">💾 Save Deck</button>
-        <button id="copy-deck">📋 Copy to TCG Live</button>
+        <button id="save-deck">💾 Salvar Deck</button>
+        <button id="copy-deck">📋 Copiar para TCG Live</button>
 
       </div>
 
@@ -37,7 +39,7 @@
     <!-- All Cards Section -->
     <section id="card-gallery" class="card">
       <div class="section-header">
-        <h2 class="search-title">All Cards (Standard)</h2>
+        <h2 class="search-title">Todas as Cartas (Standard)</h2>
       </div>
 
 
@@ -45,28 +47,28 @@
         <input id="all-cards-search-bar" type="text" class="search-bar" placeholder="Search cards...">
       </div>
       <details id="filter-options" class="filter-group">
-        <summary>🔍 Filters</summary>
+        <summary>🔍 Filtros</summary>
       
         <details class="filter-subgroup">
-          <summary>Card Type</summary>
+          <summary>Tipo de Carta</summary>
           <label><input type="checkbox" class="filter-type" value="pokémon"> Pokémon</label>
-          <label><input type="checkbox" class="filter-type" value="trainer"> Trainer</label>
-          <label><input type="checkbox" class="filter-type" value="energy"> Energy</label>
+          <label><input type="checkbox" class="filter-type" value="trainer"> Trainador</label>
+          <label><input type="checkbox" class="filter-type" value="energy"> Energia</label>
         </details>
       
         <details class="filter-subgroup">
-          <summary>Pokémon Type</summary>
+          <summary>Tipo de Pokémon</summary>
           <div class="filter-row">
-            <label><input type="checkbox" class="filter-element" value="fire"> Fire</label>
-            <label><input type="checkbox" class="filter-element" value="water"> Water</label>
-            <label><input type="checkbox" class="filter-element" value="grass"> Grass</label>
-            <label><input type="checkbox" class="filter-element" value="lightning"> Lightning</label>
-            <label><input type="checkbox" class="filter-element" value="fighting"> Fighting</label>
-            <label><input type="checkbox" class="filter-element" value="psychic"> Psychic</label>
-            <label><input type="checkbox" class="filter-element" value="darkness"> Darkness</label>
+            <label><input type="checkbox" class="filter-element" value="fire"> Fogo</label>
+            <label><input type="checkbox" class="filter-element" value="water"> Água</label>
+            <label><input type="checkbox" class="filter-element" value="grass"> Grama</label>
+            <label><input type="checkbox" class="filter-element" value="lightning"> Eletrico</label>
+            <label><input type="checkbox" class="filter-element" value="fighting"> Lutador</label>
+            <label><input type="checkbox" class="filter-element" value="psychic"> Psíquico</label>
+            <label><input type="checkbox" class="filter-element" value="darkness"> Trevas</label>
             <label><input type="checkbox" class="filter-element" value="metal"> Metal</label>
-            <label><input type="checkbox" class="filter-element" value="dragon"> Dragon</label>
-            <label><input type="checkbox" class="filter-element" value="colorless"> Colorless</label>
+            <label><input type="checkbox" class="filter-element" value="dragon"> Dragão</label>
+            <label><input type="checkbox" class="filter-element" value="colorless"> Incolor(Normal)</label>
           </div>
         </details>
       
@@ -78,30 +80,30 @@
       
         <!-- 🔽 Price Filter -->
         <details class="filter-group">
-          <summary><strong>Price Filter ($)</strong></summary>
+          <summary><strong>Filtro de Preço ($)</strong></summary>
           <label>Min: <input type="number" id="min-price" placeholder="0" min="0" step="0.01"></label><br>
           <label>Max: <input type="number" id="max-price" placeholder="20" min="0" step="0.01"></label>
         </details>
       
         <!-- 🔽 Sort Options -->
         <details class="filter-group">
-          <summary><strong>Sort By</strong></summary>
+          <summary><strong>Ordenar por:</strong></summary>
           <select id="sort-by">
-            <option value="">-- Select --</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-            <option value="set">Set Name (A-Z)</option>
-            <option value="type">Pokémon Type (A-Z)</option>
-            <option value="name">Card Name (A-Z)</option>
+            <option value="">-- Selecione --</option>
+            <option value="price-asc">Preço: Baixo para Alto</option>
+            <option value="price-desc">Preço: Alto para Baixo</option>
+            <option value="set">Nome do Set (A-Z)</option>
+            <option value="type">Tipo de Pokémon (A-Z)</option>
+            <option value="name">Nome (A-Z)</option>
           </select>
         </details>
       
         <!-- 🔽 Advanced -->
         <details class="filter-group">
-          <summary>Trainer Subtype</summary>
+          <summary>Subtipo de Treinador</summary>
           <label><input type="checkbox" class="filter-subtype" value="item"> Item</label>
-          <label><input type="checkbox" class="filter-subtype" value="supporter"> Supporter</label>
-          <label><input type="checkbox" class="filter-subtype" value="pokémon tool"> Pokémon Tool</label>
+          <label><input type="checkbox" class="filter-subtype" value="supporter"> Apoiador</label>
+          <label><input type="checkbox" class="filter-subtype" value="pokémon tool"> Ferramenta Pokémon</label>
         </details>
       
 

@@ -53,7 +53,8 @@ const updateDeckPrice = () => {
 // ✅ Handle Clicking on a Card to Add
 const handleCardClick = (event) => {
     const card = event.currentTarget;
-    addToDeck(card);
+    const shiftPressed = event.shiftKey;
+    addToDeck(card, shiftPressed);
 };
 
 // ✅ Handle Clicking on a Card to Remove
@@ -76,7 +77,7 @@ export const enableCardClick = () => {
 };
 
 // ✅ Add Card to Deck
-const addToDeck = (card) => {
+const addToDeck = (card, bulkAdd = false) => {
     const yourDeck = document.querySelector("#your-deck");
     const cardName = card.dataset.cardName;
     const cardSet = card.dataset.setName;
@@ -84,12 +85,13 @@ const addToDeck = (card) => {
     const cardRarity = card.dataset.rarity || "";
 
     const existingCard = yourDeck.querySelector(`[data-card-key="${uniqueKey}"]`);
+    const subtypes = (card.dataset.subtype || "").toLowerCase().split(",");
+    const isBasicEnergy = card.dataset.type === "energy" && subtypes.includes("basic");
 
-    if (deckCount >= MAX_DECK_SIZE) {
-        alert("Your deck must have exactly 60 cards!");
-        return;
-    }
+    let totalCopies = [...yourDeck.querySelectorAll(`[data-card-name="${cardName}"]`)]
+        .reduce((sum, c) => sum + parseInt(c.querySelector(".card-counter").textContent), 0);
 
+    // ✅ Sempre verifica as regras de Ace Spec e Radiant
     if (cardRarity.includes("ACE SPEC") && hasAceSpec) {
         alert("You can only have 1 Ace Spec card in your deck!");
         return;
@@ -100,20 +102,42 @@ const addToDeck = (card) => {
         return;
     }
 
-    const subtypes = (card.dataset.subtype || "").toLowerCase().split(",");
-    const isBasicEnergy = card.dataset.type === "energy" && subtypes.includes("basic");
+    let copiesToAdd = 1;
 
-    let totalCopies = [...yourDeck.querySelectorAll(`[data-card-name="${cardName}"]`)]
-        .reduce((sum, c) => sum + parseInt(c.querySelector(".card-counter").textContent), 0);
-
-    if (!isBasicEnergy && totalCopies >= MAX_COPIES_PER_CARD) {
-        alert(`You cannot have more than ${MAX_COPIES_PER_CARD} copies of ${cardName} across all sets!`);
-        return;
+    if (bulkAdd) {
+    if (cardRarity.includes("ACE SPEC") || cardRarity.includes("Radiant")) {
+        copiesToAdd = 1;  // Nunca deixa adicionar múltiplos via Shift+Click
+    } else if (isBasicEnergy) {
+        const remainingSlots = MAX_DECK_SIZE - deckCount;
+        copiesToAdd = Math.min(4, remainingSlots);
+        if (copiesToAdd <= 0) {
+            alert("Your deck is full!");
+            return;
+        }
+    } else {
+        copiesToAdd = Math.min(MAX_COPIES_PER_CARD - totalCopies, MAX_DECK_SIZE - deckCount);
+        if (copiesToAdd <= 0) {
+            alert(`Maximum copies for ${cardName} reached!`);
+            return;
+        }
+    }
+}
+ else {
+        if (deckCount >= MAX_DECK_SIZE) {
+            alert("Your deck must have exactly 60 cards!");
+            return;
+        }
+        if (!isBasicEnergy && totalCopies >= MAX_COPIES_PER_CARD) {
+            alert(`You cannot have more than ${MAX_COPIES_PER_CARD} copies of ${cardName} across all sets!`);
+            return;
+        }
     }
 
     if (existingCard) {
         const counter = existingCard.querySelector(".card-counter");
-        counter.textContent = parseInt(counter.textContent) + 1;
+        const currentCount = parseInt(counter.textContent);
+        const newCount = Math.min(currentCount + copiesToAdd, isBasicEnergy ? 999 : MAX_COPIES_PER_CARD);
+        counter.textContent = newCount;
     } else {
         const clonedCard = document.createElement("div");
         clonedCard.classList.add("card-placeholder");
@@ -130,7 +154,6 @@ const addToDeck = (card) => {
         clonedCard.dataset.setCode = card.dataset.setCode || "";
         clonedCard.dataset.cardNumber = card.dataset.cardNumber || "";
 
-
         clonedCard.innerHTML = `
             <img src="${card.querySelector("img").src}" alt="${cardName}" class="card-image">
             <div class="card-info">
@@ -142,20 +165,22 @@ const addToDeck = (card) => {
                     <span class="set-name">${cardSet}</span>
                 </div>
             </div>
-            <span class="card-counter">1</span>
+            <span class="card-counter">${copiesToAdd}</span>
         `;
 
         clonedCard.addEventListener("click", () => removeFromDeck(clonedCard));
         yourDeck.appendChild(clonedCard);
     }
 
+    // ✅ Marcar flags se adicionou AceSpec ou Radiant
     if (cardRarity.includes("ACE SPEC")) hasAceSpec = true;
     if (cardRarity.includes("Radiant")) hasRadiantPokemon = true;
 
-    deckCount++;
+    deckCount += copiesToAdd;
     updateDeckCounter();
     updateDeckPrice();
 };
+
 
 // ✅ Remove Card from Deck
 const removeFromDeck = (card) => {
@@ -306,7 +331,6 @@ const loadDeck = async () => {
 };
 
 // 🔍 Show Price Breakdown Modal
-// 🔍 Show Price Breakdown Modal (CORRIGIDO)
 const setupPriceModal = () => {
     const priceElement = document.getElementById("deck-price");
     const modal = document.getElementById("deck-price-modal");
@@ -318,29 +342,37 @@ const setupPriceModal = () => {
     priceElement.style.cursor = "pointer";
 
     priceElement.addEventListener("click", () => {
-        detailsList.innerHTML = ""; // limpa o modal
+        detailsList.innerHTML = "";
 
         const cards = [...document.querySelectorAll("#your-deck .card-placeholder")];
 
         cards.forEach(card => {
             const name = card.dataset.cardName;
-            const tcgUrl = card.dataset.tcgUrl;
             const count = parseInt(card.querySelector(".card-counter")?.textContent || "1", 10);
             const subtypes = (card.dataset.subtype || "").toLowerCase().split(",");
             const isBasicEnergy = card.dataset.type === "energy" && subtypes.includes("basic");
-            const price = getCardPrice(card.dataset.cardId, isBasicEnergy);
 
-            console.log({
-                name,
-                tcgUrl,
-                count,
-                isBasicEnergy,
-                price
-              });
+            // Busca pelo cachedCard
+            const cardId = card.dataset.cardId;
+            const fullCard = cachedCardMap?.[cardId];
+
+            let price = 0;
+            let tcgUrl = "";
+
+            if (fullCard && fullCard.tcgplayer) {
+                const prices = fullCard.tcgplayer.prices;
+                price = isBasicEnergy ? 0 :
+                    prices?.holofoil?.market ??
+                    prices?.normal?.market ??
+                    prices?.reverseHolofoil?.market ??
+                    prices?.holofoil?.mid ??
+                    prices?.normal?.mid ?? 0;
+
+                tcgUrl = fullCard.tcgplayer.url || "";
+            }
 
             const li = document.createElement("li");
 
-            // Nome clicável se houver URL e preço
             const nameSpan = document.createElement("span");
             if (tcgUrl && price > 0) {
                 const nameLink = document.createElement("a");
@@ -354,7 +386,6 @@ const setupPriceModal = () => {
                 nameSpan.textContent = `${count}x ${name}`;
             }
 
-            // Preço
             const priceSpan = document.createElement("span");
             priceSpan.textContent = ` $${(price * count).toFixed(2)}`;
 
@@ -374,6 +405,7 @@ const setupPriceModal = () => {
         if (e.target === modal) modal.style.display = "none";
     });
 };
+
 
 setupPriceModal();
 

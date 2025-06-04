@@ -479,3 +479,36 @@ body {
   box-shadow: 0 0 5px rgba(142, 36, 170, 0.5);
 }
 
+.deck-name-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+#deck-name {
+  font-size: 1.5rem;
+  padding: 10px 15px;
+  border: 2px solid #a259ff;
+  border-radius: 8px;
+  outline: none;
+  width: 100%;
+  max-width: 400px;
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+}
+
+#deck-name:focus {
+  box-shadow: 0 0 10px rgba(163, 104, 255, 0.6);
+  border-color: #7b3fe4;
+}
+
+#deck-name::placeholder {
+  color: #aaa;
+}
+
+.edit-icon {
+  font-size: 1.5rem;
+  color: #a259ff;
+  opacity: 0.8;
+}

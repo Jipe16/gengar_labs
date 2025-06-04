@@ -111,3 +111,16 @@ body {
     background-color: #b39ddb;
   }
   
+  .delete-deck {
+  background-color: crimson;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 6px 10px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.delete-deck:hover {
+  background-color: darkred;
+}

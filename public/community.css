@@ -198,3 +198,24 @@ body {
   border-color: #a259ff;
   box-shadow: 0 0 5px rgba(162, 89, 255, 0.6);
 }
+
+#pagination button {
+  padding: 8px 12px;
+  margin: 4px;
+  border: none;
+  background-color: #550086;
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#pagination button:hover {
+  background-color: #8300cf;
+}
+
+#pagination button.active-page {
+  background-color: #ffa500;
+  color: black;
+}

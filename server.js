@@ -188,8 +188,17 @@ app.put("/update-user", authenticateToken, async (req, res) => {
         let updateValue = value;
 
         if (field === "password") {
-            updateValue = await bcrypt.hash(value, 10);
-        }
+          const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+
+          if (!strongPasswordRegex.test(value)) {
+            return res.status(400).json({
+              error: "Senha fraca. A senha deve conter no mínimo: 8 caracteres, 1 maiúscula, 1 minúscula, 1 número e 1 símbolo."
+            });
+    }
+
+    updateValue = await bcrypt.hash(value, 10);
+}
+
 
         updateQuery = `UPDATE users SET ${field} = $1 WHERE id = $2 RETURNING username, email`;
 
@@ -252,7 +261,7 @@ app.put("/save-deck/:deckId", authenticateToken, async (req, res) => {
       return res.status(400).json({ error: "Missing required deck information." });
     }
   
-    // 🧮 Calcular preço total (simples - apenas quantidade * 0.1 como exemplo)
+    //  Calcular preço total
     let total_price = 0;
         cards.forEach(c => {
         const count = c.count || 1;
@@ -271,16 +280,17 @@ app.put("/save-deck/:deckId", authenticateToken, async (req, res) => {
     try {
       const result = await pool.query(
         `UPDATE decks 
-         SET deck_name = $1, 
-             cards = $2, 
-             is_public = $3, 
-             main_card = $4,
-             key_cards = $5,
-             description = $6,
-             video_links = $7,
-             cards_price = $8
-         WHERE id = $9 AND user_id = $10
-         RETURNING *`,
+        SET deck_name = $1, 
+            cards = $2, 
+            is_public = $3, 
+            main_card = $4,
+            key_cards = $5,
+            description = $6,
+            video_links = $7,
+            cards_price = $8,
+            published_at = CASE WHEN $3 = true AND published_at IS NULL THEN NOW() ELSE published_at END
+        WHERE id = $9 AND user_id = $10
+        RETURNING *`,
         [
           deckName,
           JSON.stringify(cards),
@@ -288,16 +298,13 @@ app.put("/save-deck/:deckId", authenticateToken, async (req, res) => {
           main_card ? JSON.stringify(main_card) : null,
           key_cards ? JSON.stringify(key_cards) : null,
           description || null,
-          Array.isArray(video_links)
-            ? video_links
-            : typeof video_links === "string"
-              ? [video_links]
-              : null,
+          Array.isArray(video_links) ? video_links : typeof video_links === "string" ? [video_links] : null,
           total_price,
           deckId,
           userId
         ]
-      );
+);
+
   
       if (result.rows.length === 0) {
         return res.status(404).json({ error: "Deck not found or unauthorized." });
@@ -363,8 +370,8 @@ app.get("/load-deck/:deckId", authenticateToken, async (req, res) => {
 // ✅ Get All Public Decks
 app.get("/public-decks", authenticateToken, async (req, res) => {
     const sort = req.query.sort || "recent";
-    let orderClause = "ORDER BY d.created_at DESC"; // padrão: mais recentes
-  
+    let orderClause = "ORDER BY d.published_at DESC NULLS LAST";
+
     if (sort === "votes") {
       orderClause = "ORDER BY (d.upvotes - d.downvotes) DESC";
     } else if (sort === "price") {
@@ -372,29 +379,30 @@ app.get("/public-decks", authenticateToken, async (req, res) => {
     } else if (sort === "expensive") {
       orderClause = "ORDER BY d.cards_price DESC NULLS LAST";
     } else if (sort === "oldest") {
-      orderClause = "ORDER BY d.created_at ASC";
+      orderClause = "ORDER BY d.published_at ASC NULLS LAST";
     } else if (sort === "least_votes") {
       orderClause = "ORDER BY (d.upvotes - d.downvotes) ASC";
     }
-  
+
     try {
       const result = await pool.query(`
         SELECT 
           d.id, d.deck_name, d.main_card, d.key_cards,
           d.description, d.video_links, d.upvotes, d.downvotes,
-          d.cards, d.cards_price, d.created_at, u.username
+          d.cards, d.cards_price, d.created_at, d.published_at, u.username
         FROM decks d
         JOIN users u ON d.user_id = u.id
         WHERE d.is_public = true
         ${orderClause}
       `);
-  
+
       res.status(200).json({ decks: result.rows });
     } catch (error) {
       console.error("❌ Error loading public decks:", error);
       res.status(500).json({ error: "Failed to load public decks." });
     }
-  });
+});
+
   
   
   
@@ -451,7 +459,24 @@ app.get("/public-decks", authenticateToken, async (req, res) => {
     }
   });
   
-  
+  app.delete("/delete-deck/:deckId", authenticateToken, async (req, res) => {
+    const { deckId } = req.params;
+    const userId = req.user.userId;
+
+    try {
+        const result = await pool.query("DELETE FROM decks WHERE id = $1 AND user_id = $2", [deckId, userId]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Deck not found or unauthorized." });
+        }
+
+        res.json({ message: "Deck deleted successfully!" });
+    } catch (error) {
+        console.error("❌ Error deleting deck:", error);
+        res.status(500).json({ error: "Failed to delete deck." });
+    }
+});
+
   
 
 // ✅ Start Server
