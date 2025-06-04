@@ -69,7 +69,11 @@ document.addEventListener("DOMContentLoaded", loadUserDecks);
 
 // ✅ Logout
 document.getElementById("logout-button").addEventListener("click", () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("selectedDeck");
+
     window.location.href = "login.html";
 });
 

@@ -49,9 +49,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-
 // ✅ Function to Fetch All Cards and Store in Cache
 const preloadCards = async () => {
+    const cached = localStorage.getItem("cachedCards");
+    if (cached) {
+        console.log("✅ Using cached cards from localStorage.");
+        return true;
+    }
+
     const API_KEY = "905ecd24-0044-48cf-a8a8-8c709f550065";
     const standardSets = [
         "Scarlet & Violet", "Brilliant Stars", "Astral Radiance",
@@ -67,9 +72,6 @@ const preloadCards = async () => {
         const batchSets = standardSets.slice(i, i + batchSize);
         const batchQuery = batchSets.map(set => `set.name:"${set}"`).join(" OR ");
         const batchURL = `https://api.pokemontcg.io/v2/cards?q=(${encodeURIComponent(batchQuery)})&pageSize=250&select=id,name,number,set,images,tcgplayer,tcgplayer.productId,supertype,subtypes,rarity,types`;
-
-
-
 
         try {
             const response = await fetch(`${batchURL}&pageSize=250`, {
@@ -89,11 +91,10 @@ const preloadCards = async () => {
 
     localStorage.setItem("cachedCards", JSON.stringify(allFetchedCards));
     console.log("✅ All cards cached for faster loads.");
-    return true; // ✅ ADD THIS LINE
+    return true;
 };
 
-console.log("🔎 Sample card:", allFetchedCards.find(c => c.tcgplayer?.productId));
-
+// ✅ (Backup - not used anymore)
 async function fetchAllSetsAndCache() {
     try {
         const cached = localStorage.getItem("cachedCards");
