@@ -11,6 +11,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const isStrongPassword = (password) => {
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&^()\-_=+])[A-Za-z\d@$!%*?#&^()\-_=+]{8,}$/;
+    return strongPasswordRegex.test(password);
+};
+
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
@@ -66,6 +72,10 @@ app.post("/register", async (req, res) => {
         return res.status(400).json({ error: "All fields are required." });
     }
 
+    if (!isStrongPassword(password)) {
+        return res.status(400).json({ error: "Password must be at least 8 characters long, include uppercase, lowercase, number, and special character." });
+    }
+
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const verificationToken = crypto.randomBytes(32).toString("hex");
@@ -75,13 +85,20 @@ app.post("/register", async (req, res) => {
             [username, email, hashedPassword, verificationToken]
         );
 
-        const verifyLink = `http://localhost:5000/verify-email?token=${verificationToken}`;
+        const verifyLink = `${process.env.BASE_URL}/verify-email?token=${verificationToken}`;
         await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: "Verify your email - Pokémon TCG DeckBuilder",
-            html: `<p>Click the link below to verify your email:</p><a href="${verifyLink}">${verifyLink}</a>`
-        });
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: "Verify your email - Pokémon TCG DeckBuilder",
+          html: `
+            <p>Olá, ${username}!</p>
+            <p>Bem-vindo ao Gengar Labs DeckBuilder!</p>
+            <p>Por favor, clique no link abaixo para verificar o seu email e ativar sua conta:</p>
+            <a href="${verifyLink}">${verifyLink}</a>
+            <p>Se você não criou essa conta, pode ignorar este email.</p>
+          `
+      });
+
 
         res.status(201).json({ message: "Registration successful! Check your email to verify." });
     } catch (error) {
@@ -89,6 +106,7 @@ app.post("/register", async (req, res) => {
         res.status(500).json({ error: "Failed to register user." });
     }
 });
+
 
 // ✅ Verify Email Route
 app.get("/verify-email", async (req, res) => {
@@ -443,4 +461,3 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-
