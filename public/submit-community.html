@@ -8,6 +8,18 @@
   <link rel="icon" type="image/png" href="assets/favicon.ico" />
 </head>
 <body>
+  <div id="navbar-container"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch("navbar.html")
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById("navbar-container").innerHTML = html;
+      });
+  });
+</script>
+
   <header class="app-header">
     <h1>Enviar Deck à Comunidade</h1>
   </header>

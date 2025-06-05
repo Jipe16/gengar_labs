@@ -8,6 +8,18 @@
   <link rel="icon" type="image/png" href="assets/favicon.ico" />
 </head>
 <body>
+  <div id="navbar-container"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch("navbar.html")
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById("navbar-container").innerHTML = html;
+      });
+  });
+</script>
+
   <header class="app-header">
     <h1>🌐 Decks da Comunidade</h1>
     <div class="decklist-controls">
@@ -21,14 +33,7 @@
         <option value="expensive">💸 Mais Caros</option>
       </select>
 
-      <label for="limit-dropdown">Mostrar:</label>
-      <select id="limit-dropdown">
-        <option value="5">5 decks</option>
-        <option value="10" selected>10 decks</option>
-        <option value="25">25 decks</option>
-        <option value="50">50 decks</option>
-        <option value="all">Todos</option>
-      </select>
+
 
       <input type="text" id="search-decks" placeholder="🔍 Buscar por nome do deck..." />
 

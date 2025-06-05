@@ -57,7 +57,7 @@ const formatDeckForClipboard = (cards) => {
   return result.trim();
 };
 
-// 🔃 Renderizar os decks com paginação
+// 🔃 Renderizar os decks (sem paginação local agora)
 const renderDecks = (decks) => {
   container.innerHTML = "";
 
@@ -66,17 +66,12 @@ const renderDecks = (decks) => {
     return;
   }
 
-  totalPages = Math.ceil(decks.length / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const paginatedDecks = decks.slice(startIndex, startIndex + pageSize);
-
-  paginatedDecks.forEach(deck => {
+  decks.forEach(deck => {
     const {
       id, deck_name, cards, main_card, key_cards, description, video_links,
       username, upvotes, downvotes, published_at, cards_price
     } = deck;
 
-    const votes = upvotes - downvotes;
     const videoLinksArray = Array.isArray(video_links)
       ? video_links
       : typeof video_links === "string"
@@ -135,68 +130,26 @@ ${formatDeckList(cards)}
 
   setupVoteHandlers();
   setupCopyHandlers(decks);
-  renderPagination();
 };
 
-// 🔃 Paginação (novidade)
-const renderPagination = () => {
-  const paginationContainer = document.getElementById("pagination");
-  paginationContainer.innerHTML = "";
-
-  if (totalPages <= 1) return;
-
-  for (let i = 1; i <= totalPages; i++) {
-    const btn = document.createElement("button");
-    btn.textContent = i;
-    btn.className = (i === currentPage) ? "active-page" : "";
-    btn.addEventListener("click", () => {
-      currentPage = i;
-      renderDecks(allDecks);
-    });
-    paginationContainer.appendChild(btn);
-  }
-};
-
-// 🔃 Carregar decks do servidor
-const loadPublicDecks = async (sortBy = "recent") => {
+// 🔃 Carregar decks do servidor (agora passando paginação pro backend)
+const loadPublicDecks = async () => {
   try {
-    const res = await fetch("http://localhost:5000/public-decks", {
+    const url = `http://localhost:5000/public-decks?sort=${dropdown.value}&page=${currentPage}&perPage=${pageSize}`;
+    const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
     allDecks = data.decks || [];
-    applySortAndFilter(sortBy, searchInput.value);
+    totalPages = Math.ceil((data.totalCount || 0) / pageSize);
+    renderDecks(allDecks);
+    renderPagination();
   } catch (err) {
     console.error("Erro ao carregar decks públicos:", err);
     container.innerHTML = "<p>Erro ao carregar decks públicos.</p>";
   }
 };
 
-// 🔃 Aplicar ordenação e filtro
-const applySortAndFilter = (sortBy, searchTerm = "") => {
-  let decks = [...allDecks];
-
-  if (searchTerm.trim()) {
-    const lower = searchTerm.toLowerCase();
-    decks = decks.filter(deck =>
-      deck.deck_name.toLowerCase().includes(lower) ||
-      (deck.description || "").toLowerCase().includes(lower) ||
-      deck.username.toLowerCase().includes(lower)
-    );
-  }
-
-  decks.sort((a, b) => {
-    if (sortBy === "votes") return (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes);
-    if (sortBy === "price") return (a.cards_price || 0) - (b.cards_price || 0);
-    if (sortBy === "oldest") return new Date(a.published_at || a.created_at) - new Date(b.published_at || b.created_at);
-    if (sortBy === "expensive") return (b.cards_price || 0) - (a.cards_price || 0);
-    if (sortBy === "least_votes") return (a.upvotes - a.downvotes) - (b.upvotes - b.downvotes);
-    return new Date(b.published_at || b.created_at) - new Date(a.published_at || a.created_at);
-  });
-
-  currentPage = 1;
-  renderDecks(decks);
-};
 
 // 🔃 Votar
 const setupVoteHandlers = () => {
@@ -217,7 +170,7 @@ const setupVoteHandlers = () => {
 
         const result = await res.json();
         if (res.ok) {
-          loadPublicDecks(dropdown.value);
+          loadPublicDecks();
         } else {
           alert("Erro ao votar: " + result.error);
         }
@@ -268,13 +221,43 @@ const setupCopyHandlers = (decks) => {
   });
 };
 
+const renderPagination = () => {
+  const paginationContainer = document.getElementById("pagination");
+  paginationContainer.innerHTML = "";
+
+  if (totalPages <= 1) return;
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    if (i === currentPage) {
+      btn.classList.add("active-page");
+    }
+    btn.addEventListener("click", () => {
+      currentPage = i;
+      loadPublicDecks();
+    });
+    paginationContainer.appendChild(btn);
+  }
+};
+
+
 // 🔃 Eventos
 dropdown?.addEventListener("change", () => {
-  applySortAndFilter(dropdown.value, searchInput.value);
+  currentPage = 1;
+  loadPublicDecks();
 });
 
-searchInput?.addEventListener("input", () => {
-  applySortAndFilter(dropdown.value, searchInput.value);
+document.getElementById("prev-page")?.addEventListener("click", () => {
+  if (currentPage > 1) {
+    currentPage--;
+    loadPublicDecks();
+  }
+});
+
+document.getElementById("next-page")?.addEventListener("click", () => {
+  currentPage++;
+  loadPublicDecks();
 });
 
 // ✅ Inicialização

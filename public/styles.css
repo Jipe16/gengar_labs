@@ -464,7 +464,7 @@ body {
   width: 100%;
   max-width: 400px;
   padding: 10px 15px;
-  font-size: 1rem;
+  font-size: 16px;  
   border-radius: 8px;
   border: 1px solid #ccc;
   margin-bottom: 20px;
@@ -472,7 +472,9 @@ body {
   color: #f0f0f0;
   outline: none;
   transition: border 0.3s ease, box-shadow 0.3s ease;
+  height: 40px;
 }
+
 
 #all-cards-search-bar:focus {
   border-color: #8e24aa;
@@ -511,4 +513,63 @@ body {
   font-size: 1.5rem;
   color: #a259ff;
   opacity: 0.8;
+}
+
+.search-filter-wrapper {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+#toggle-filters {
+  height: 45px;  /* <-- ADICIONE ESSA LINHA */
+  padding: 0 15px; /* <-- ajuste o padding lateral, pode manter 10px se preferir */
+  border: none;
+  background-color: #6a0dad;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+#toggle-filters:hover {
+  background-color: #8e44ad;
+}
+
+#filter-options, .filter-group {
+  display: none;
+}
+
+.navbar {
+  background-color: #2c2c2c;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #550086;
+  z-index: 999;
+  position: sticky;
+  top: 0;
+}
+
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #a259ff;
+}
+
+.nav-right a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: bold;
+  transition: color 0.3s;
+  font-size: 1rem;
+}
+
+.nav-right a:hover {
+  color: #a259ff;
 }

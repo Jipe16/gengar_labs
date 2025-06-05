@@ -370,42 +370,52 @@ app.get("/load-deck/:deckId", authenticateToken, async (req, res) => {
 // ✅ Get All Public Decks
 app.get("/public-decks", authenticateToken, async (req, res) => {
     const sort = req.query.sort || "recent";
+    const page = parseInt(req.query.page) || 1;
+    const perPage = parseInt(req.query.perPage) || 10;
+    const offset = (page - 1) * perPage;
+
     let orderClause = "ORDER BY d.published_at DESC NULLS LAST";
 
     if (sort === "votes") {
-      orderClause = "ORDER BY (d.upvotes - d.downvotes) DESC";
+        orderClause = "ORDER BY (d.upvotes - d.downvotes) DESC";
     } else if (sort === "price") {
-      orderClause = "ORDER BY d.cards_price ASC NULLS LAST";
+        orderClause = "ORDER BY d.cards_price ASC NULLS LAST";
     } else if (sort === "expensive") {
-      orderClause = "ORDER BY d.cards_price DESC NULLS LAST";
+        orderClause = "ORDER BY d.cards_price DESC NULLS LAST";
     } else if (sort === "oldest") {
-      orderClause = "ORDER BY d.published_at ASC NULLS LAST";
+        orderClause = "ORDER BY d.published_at ASC NULLS LAST";
     } else if (sort === "least_votes") {
-      orderClause = "ORDER BY (d.upvotes - d.downvotes) ASC";
+        orderClause = "ORDER BY (d.upvotes - d.downvotes) ASC";
     }
 
     try {
-      const result = await pool.query(`
-        SELECT 
-          d.id, d.deck_name, d.main_card, d.key_cards,
-          d.description, d.video_links, d.upvotes, d.downvotes,
-          d.cards, d.cards_price, d.created_at, d.published_at, u.username
-        FROM decks d
-        JOIN users u ON d.user_id = u.id
-        WHERE d.is_public = true
-        ${orderClause}
-      `);
+        const result = await pool.query(`
+            SELECT 
+              d.id, d.deck_name, d.main_card, d.key_cards,
+              d.description, d.video_links, d.upvotes, d.downvotes,
+              d.cards, d.cards_price, d.created_at, d.published_at, u.username
+            FROM decks d
+            JOIN users u ON d.user_id = u.id
+            WHERE d.is_public = true
+            ${orderClause}
+            LIMIT $1 OFFSET $2
+        `, [perPage, offset]);
 
-      res.status(200).json({ decks: result.rows });
+        const totalCountResult = await pool.query(`
+  SELECT COUNT(*) FROM decks d
+  WHERE d.is_public = true
+`);
+
+const totalCount = parseInt(totalCountResult.rows[0].count, 10);
+
+res.status(200).json({ decks: result.rows, totalCount });
+
     } catch (error) {
-      console.error("❌ Error loading public decks:", error);
-      res.status(500).json({ error: "Failed to load public decks." });
+        console.error("❌ Error loading public decks:", error);
+        res.status(500).json({ error: "Failed to load public decks." });
     }
 });
 
-  
-  
-  
   app.post("/vote-deck/:deckId", authenticateToken, async (req, res) => {
     const { deckId } = req.params;
     const userId = req.user.userId;

@@ -88,6 +88,13 @@ export const applyFilters = () => {
 };
 
 // Event Listeners com debounce
+document.getElementById("toggle-filters")?.addEventListener("click", () => {
+  const filters = document.querySelectorAll("details.filter-group, #filter-options");
+  filters.forEach(f => {
+    f.style.display = (f.style.display === "none" || f.style.display === "") ? "block" : "none";
+  });
+});
+
 document.querySelectorAll(".filter-type, .filter-element, .filter-subtype")
   .forEach(f => f.addEventListener("change", debounce(applyFilters)));
 

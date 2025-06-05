@@ -12,6 +12,11 @@
   </header>
 
   <main class="main-container">
+    <div class="back-to-login-top">
+      <button onclick="window.location.href='login.html'">← Voltar para Login</button>
+    </div>
+
+
     <section class="card">
       <form id="register-form" class="form-container">
         <label for="username">Username</label>
@@ -22,6 +27,17 @@
 
         <label for="password">Password</label>
         <input type="password" id="password" class="input-field" required />
+        <div class="password-info">
+          Sua senha deve conter:
+          <ul>
+            <li> Pelo menos 8 caracteres</li>
+            <li> Uma letra maiúscula (A-Z)</li>
+            <li> Uma letra minúscula (a-z)</li>
+            <li> Um número (0-9)</li>
+            <li> Um símbolo (ex: @, #, !, %, etc)</li>
+          </ul>
+        </div>
+
 
         <button type="submit" class="btn-purple">Register</button>
       </form>

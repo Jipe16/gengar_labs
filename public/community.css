@@ -219,3 +219,34 @@ body {
   background-color: #ffa500;
   color: black;
 }
+
+.navbar {
+  background-color: #2c2c2c;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #550086;
+  z-index: 999;
+  position: sticky;
+  top: 0;
+}
+
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #a259ff;
+}
+
+.nav-right a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: bold;
+  transition: color 0.3s;
+  font-size: 1rem;
+}
+
+.nav-right a:hover {
+  color: #a259ff;
+}

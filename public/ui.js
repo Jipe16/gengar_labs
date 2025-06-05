@@ -2,7 +2,6 @@ import { applyFilters } from "./filters.js";
 import { enableCardClick } from "./deckManager.js";
 import { deckCount } from "./deckManager.js"; 
 
-
 // ✅ Show & Hide Loading Indicator
 export const showLoading = () => document.getElementById("loading-indicator").style.display = "block";
 export const hideLoading = () => document.getElementById("loading-indicator").style.display = "none";
@@ -10,7 +9,6 @@ export const hideLoading = () => document.getElementById("loading-indicator").st
 export const updateDeckCounter = () => {
     document.getElementById("deck-counter").textContent = `${deckCount}/60`;
 };
-
 
 // ✅ Display cards in the card gallery
 export const displayCards = (cards) => {
@@ -20,7 +18,6 @@ export const displayCards = (cards) => {
     cards.forEach((card) => {
         const uniqueKey = `${card.name} - ${card.set.name}`;
         
-        // ✅ Create card element
         const cardElement = document.createElement("div");
         cardElement.classList.add("card-placeholder");
         cardElement.dataset.cardId = card.id;
@@ -34,9 +31,6 @@ export const displayCards = (cards) => {
         cardElement.dataset.productId = card.tcgplayer?.productId || "";
         cardElement.dataset.cardNumber = card.number || "";
         cardElement.dataset.setCode = card.set.ptcgoCode || "";
-
-
-
 
         cardElement.innerHTML = `
             <img src="${card.images.small}" alt="${card.name}" class="card-image">
@@ -54,11 +48,11 @@ export const displayCards = (cards) => {
         cardList.appendChild(cardElement);
     });
 
-    applyFilters(); // ✅ Ensure filters work after displaying cards
-    enableCardClick(); // ✅ Ensure cards can be clicked to add to deck
+    applyFilters(); 
+    enableCardClick(); 
 };
 
-// ✅ Hover Preview Feature
+// ✅ Hover Preview Feature (corrigido)
 const hoverPreview = document.getElementById("hover-preview");
 
 // ✅ Show preview when hovering over a card
@@ -70,11 +64,15 @@ document.querySelector("#all-cards").addEventListener("mouseover", (event) => {
     hoverPreview.style.display = "block";
 });
 
-// ✅ Move preview as the mouse moves
-document.addEventListener("mousemove", (event) => {
-    hoverPreview.style.top = `${event.clientY + 20}px`; 
-    hoverPreview.style.left = `${event.clientX + 20}px`;
+// ✅ Move preview dentro do container corretamente
+document.querySelector("#all-cards").addEventListener("mousemove", (event) => {
+    const offsetX = event.pageX;
+    const offsetY = event.pageY;
+
+    hoverPreview.style.left = `${offsetX + 20}px`;
+    hoverPreview.style.top = `${offsetY + 20}px`;
 });
+
 
 // ✅ Hide preview when mouse leaves
 document.querySelector("#all-cards").addEventListener("mouseleave", () => {

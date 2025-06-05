@@ -63,3 +63,43 @@ body {
 .btn-purple:hover {
   background-color: #8e24aa;
 }
+
+.password-info {
+  margin-top: 8px;
+  background-color: #2a2a2a;
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #f0f0f0;
+}
+
+.password-info ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 5px 0 0 0;
+}
+
+.password-info li {
+  margin-bottom: 4px;
+}
+
+.back-to-login-top {
+  text-align: left;
+  margin: 20px;
+}
+
+.back-to-login-top button {
+  background-color: #6a0dad;
+  color: white;
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-to-login-top button:hover {
+  background-color: #8e44ad;
+}

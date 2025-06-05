@@ -8,6 +8,18 @@
   <link rel="icon" type="image/png" href="assets/favicon.ico" />
 </head>
 <body>
+  <div id="navbar-container"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch("navbar.html")
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById("navbar-container").innerHTML = html;
+      });
+  });
+</script>
+
   <header class="app-header">
     <h2>Gengar Labs Deck Builder</h2>
   </header>
@@ -43,11 +55,13 @@
       </div>
 
 
-      <div style="margin-bottom: 10px;">
-        <input id="all-cards-search-bar" type="text" class="search-bar" placeholder="Search cards...">
+      <div class="search-filter-wrapper">
+      <input id="all-cards-search-bar" type="text" class="search-bar" placeholder="Search cards...">
+      <button id="toggle-filters">🔎 Mostrar Filtros</button>
       </div>
+
       <details id="filter-options" class="filter-group">
-        <summary>🔍 Filtros</summary>
+        <summary>Filtros Básicos</summary>
       
         <details class="filter-subgroup">
           <summary>Tipo de Carta</summary>
