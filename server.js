@@ -373,6 +373,7 @@ app.get("/public-decks", authenticateToken, async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const perPage = parseInt(req.query.perPage) || 10;
     const offset = (page - 1) * perPage;
+    const searchTerm = req.query.search ? req.query.search.toLowerCase() : '';
 
     let orderClause = "ORDER BY d.published_at DESC NULLS LAST";
 
@@ -389,32 +390,51 @@ app.get("/public-decks", authenticateToken, async (req, res) => {
     }
 
     try {
-        const result = await pool.query(`
+        let whereClause = "WHERE d.is_public = true";
+        let values = [];
+        let searchValues = [];
+
+        if (searchTerm) {
+            whereClause += ` AND (LOWER(d.deck_name) LIKE $1 OR LOWER(d.description) LIKE $1 OR LOWER(u.username) LIKE $1)`;
+            values.push(`%${searchTerm}%`);
+            searchValues = [...values];
+        }
+
+        const dataQuery = `
             SELECT 
               d.id, d.deck_name, d.main_card, d.key_cards,
               d.description, d.video_links, d.upvotes, d.downvotes,
               d.cards, d.cards_price, d.created_at, d.published_at, u.username
             FROM decks d
             JOIN users u ON d.user_id = u.id
-            WHERE d.is_public = true
+            ${whereClause}
             ${orderClause}
-            LIMIT $1 OFFSET $2
-        `, [perPage, offset]);
+            LIMIT $${values.length + 1} OFFSET $${values.length + 2}
+        `;
 
-        const totalCountResult = await pool.query(`
-  SELECT COUNT(*) FROM decks d
-  WHERE d.is_public = true
-`);
+        const decksResult = await pool.query(
+            dataQuery,
+            [...values, perPage, offset]
+        );
 
-const totalCount = parseInt(totalCountResult.rows[0].count, 10);
+        const countQuery = `
+            SELECT COUNT(*) AS total 
+            FROM decks d 
+            JOIN users u ON d.user_id = u.id 
+            ${whereClause}
+        `;
 
-res.status(200).json({ decks: result.rows, totalCount });
+        const countResult = await pool.query(countQuery, searchValues);
+        const totalCount = parseInt(countResult.rows[0].total);
 
+        res.status(200).json({ decks: decksResult.rows, totalCount });
     } catch (error) {
         console.error("❌ Error loading public decks:", error);
         res.status(500).json({ error: "Failed to load public decks." });
     }
 });
+
+
 
   app.post("/vote-deck/:deckId", authenticateToken, async (req, res) => {
     const { deckId } = req.params;

@@ -134,21 +134,19 @@ ${formatDeckList(cards)}
 
 // 🔃 Carregar decks do servidor (agora passando paginação pro backend)
 const loadPublicDecks = async () => {
-  try {
-    const url = `http://localhost:5000/public-decks?sort=${dropdown.value}&page=${currentPage}&perPage=${pageSize}`;
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
-    allDecks = data.decks || [];
-    totalPages = Math.ceil((data.totalCount || 0) / pageSize);
-    renderDecks(allDecks);
-    renderPagination();
-  } catch (err) {
-    console.error("Erro ao carregar decks públicos:", err);
-    container.innerHTML = "<p>Erro ao carregar decks públicos.</p>";
-  }
+  const searchTerm = searchInput.value.trim();
+  const url = `http://localhost:5000/public-decks?sort=${dropdown.value}&page=${currentPage}&perPage=${pageSize}&search=${encodeURIComponent(searchTerm)}`;
+
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  allDecks = data.decks || [];
+  totalPages = Math.ceil((data.totalCount || 0) / pageSize);
+  renderDecks(allDecks);
+  renderPagination();
 };
+
 
 
 // 🔃 Votar
@@ -243,6 +241,12 @@ const renderPagination = () => {
 
 
 // 🔃 Eventos
+searchInput?.addEventListener("input", () => {
+  currentPage = 1;
+  loadPublicDecks();
+});
+
+
 dropdown?.addEventListener("change", () => {
   currentPage = 1;
   loadPublicDecks();
